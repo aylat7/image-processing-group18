@@ -1,0 +1,21 @@
+# Images live on the shared Google Drive, not in git
+data/*
+!data/README.md
+# Split CSVs are small and everyone must use the same ones, so they ARE tracked
+!data/splits/
+
+# Trained models are shared through Drive (too large for git)
+models/*
+!models/.gitkeep
+
+# Python / Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/

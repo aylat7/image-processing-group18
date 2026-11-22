@@ -1,0 +1,17 @@
+# Local install:  python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+# On Colab, the setup cell of each notebook installs the pinned packages below.
+#
+# Exact pins matter here: scikit-learn/joblib must match between Colab and local,
+# or hog_svm.joblib won't load. scikit-image must match so HOG features are
+# identical in training and in the webcam app.
+scikit-learn==1.9.1
+scikit-image==0.26.0
+joblib==1.6.0
+
+# These can float. Colab's preinstalled torch is fine; a state_dict loads across versions.
+torch>=2.5
+torchvision>=0.20
+numpy>=2.0,<3
+opencv-python>=4.10
+matplotlib>=3.9
+pandas>=2.2
