@@ -5,7 +5,6 @@ Images are **not** in git. They live in the shared Google Drive folder.
 ```
 data/
 ├── raw/asl_raw/      # Mendeley "Type_01 (Raw_Gesture)" photos: 28 folders × 1500 images, 300×300 JPG
-├── subset/           # (Phase 2) 500 imgs per letter A–Z, DEL/SPACE dropped
 ├── splits/           # train.csv / val.csv / test.csv  ← tracked in git
 ├── webcam_train/     # our own images, may be used for training
 └── webcam_test/      # held-out trials, NEVER used for training or tuning

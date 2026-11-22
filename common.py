@@ -29,7 +29,6 @@ NUM_CLASSES = len(CLASSES)  # 26
 PROJECT_ROOT = Path(__file__).resolve().parent
 DATA_DIR = Path(os.environ.get("ASL_DATA_DIR", PROJECT_ROOT / "data"))
 RAW_DIR = DATA_DIR / "raw" / "asl_raw"      # Mendeley Type_01 raw photos
-SUBSET_DIR = DATA_DIR / "subset"
 SPLITS_DIR = DATA_DIR / "splits"
 WEBCAM_TRAIN_DIR = DATA_DIR / "webcam_train"
 WEBCAM_TEST_DIR = DATA_DIR / "webcam_test"
@@ -40,8 +39,7 @@ RESULTS_DIR = PROJECT_ROOT / "results"
 # Settings
 # ---------------------------------------------------------------------------
 SEED = 467
-IMAGES_PER_CLASS = 500                    # subset size per letter (proposal)
-SPLIT_FRACTIONS = (0.70, 0.15, 0.15)      # train / val / test
+# Subset/split rules live in notebooks/1_prepare_data.ipynb; its output CSVs in data/splits/ are the source of truth.
 
 # HOG + SVM input
 HOG_IMG_SIZE = 64                         # grayscale square fed to HOG
@@ -98,10 +96,27 @@ def box_coords(frame_shape) -> tuple[int, int, int, int]:
     return x1, y1, x1 + side, y1 + side
 
 
+def orient_frame(frame: np.ndarray) -> np.ndarray:
+    """Apply the webcam orientation used everywhere (capture tool AND app)."""
+    return cv2.flip(frame, 1) if MIRROR_WEBCAM else frame
+
+
 def crop_box(frame: np.ndarray) -> np.ndarray:
     """Cut the fixed hand box out of a webcam frame (BGR in, BGR out)."""
     x1, y1, x2, y2 = box_coords(frame.shape)
     return frame[y1:y2, x1:x2].copy()
+
+
+def load_split(name: str):
+    """Load data/splits/<name>.csv as a DataFrame with 'abs_path' and integer 'y' columns.
+
+    name: "train", "val" or "test".
+    """
+    import pandas as pd
+    df = pd.read_csv(SPLITS_DIR / f"{name}.csv")
+    df["abs_path"] = [str(DATA_DIR / p) for p in df["path"]]
+    df["y"] = df["label"].map(CLASS_TO_IDX)
+    return df
 
 
 # ---------------------------------------------------------------------------
